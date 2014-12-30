@@ -1,11 +1,12 @@
 package com.pointburst.jsmusic.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by FARHAN on 12/28/2014.
  */
-public class Result {
+public class Result implements Serializable{
     private ArrayList<Album> albums;
 
     public ArrayList<Album> getAlbums() {

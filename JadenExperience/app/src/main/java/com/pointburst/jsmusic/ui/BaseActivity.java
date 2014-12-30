@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.util.Config;
 import android.util.Log;
@@ -30,7 +31,7 @@ import com.pointburst.jsmusic.utils.Utils;
 /**
  * Created by FARHAN on 12/27/2014.
  */
-abstract class BaseActivity extends Activity implements Response.Listener, Response.ErrorListener{
+abstract class BaseActivity extends FragmentActivity implements Response.Listener, Response.ErrorListener{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

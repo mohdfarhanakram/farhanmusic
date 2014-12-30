@@ -5,4 +5,5 @@ package com.pointburst.jsmusic.constant;
  */
 public class Constants {
     public static final String MEDIA_RESULT = "media_result";
+    public static final String RESULT_KEY = "Result_key";
 }

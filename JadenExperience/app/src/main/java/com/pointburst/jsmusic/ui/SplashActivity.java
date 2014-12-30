@@ -5,7 +5,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import com.pointburst.jsmusic.R;
 import com.pointburst.jsmusic.constant.ApiEvent;
+import com.pointburst.jsmusic.constant.Constants;
 import com.pointburst.jsmusic.constant.ServerApi;
+import com.pointburst.jsmusic.model.Result;
 import com.pointburst.jsmusic.network.ServiceResponse;
 
 /**
@@ -29,16 +31,23 @@ public class SplashActivity extends BaseActivity {
     @Override
     public void updateUi(ServiceResponse response) {
         super.updateUi(response);
+        Result result = (Result)response.getResponse();
+        if(result!=null){
+            navigateToHomeScreen(result);
 
-        navigateToHomeScreen();
+        }else{
+           showToast("Some thing went wrong.");
+        }
+
     }
 
-    private void navigateToHomeScreen(){
+    private void navigateToHomeScreen(final Result result){
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 /* Create an Intent that will start the Menu-Activity. */
                 Intent mainIntent = new Intent(SplashActivity.this, MainActivity.class);
+                mainIntent.putExtra(Constants.RESULT_KEY,result);
                 SplashActivity.this.startActivity(mainIntent);
                 SplashActivity.this.finish();
             }

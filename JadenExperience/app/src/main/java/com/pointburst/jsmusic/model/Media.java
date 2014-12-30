@@ -1,9 +1,11 @@
 package com.pointburst.jsmusic.model;
 
+import java.io.Serializable;
+
 /**
  * Created by FARHAN on 12/27/2014.
  */
-public class Media {
+public class Media implements Serializable {
 
     private String showHideControlSection;
     private String lyrics;

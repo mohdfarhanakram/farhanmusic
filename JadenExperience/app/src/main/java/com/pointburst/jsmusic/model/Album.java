@@ -1,11 +1,12 @@
 package com.pointburst.jsmusic.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by FARHAN on 12/27/2014.
  */
-public class Album {
+public class Album implements Serializable {
 
     private String mediaTextColor;
     private String albumTextColor;
