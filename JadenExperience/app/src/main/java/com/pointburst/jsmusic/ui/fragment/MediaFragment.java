@@ -1,5 +1,7 @@
 package com.pointburst.jsmusic.ui.fragment;
 
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import com.pointburst.jsmusic.R;
 import com.pointburst.jsmusic.model.Media;
+import com.pointburst.jsmusic.utils.Logger;
 import com.pointburst.jsmusic.utils.PicassoEx;
 
 /**
@@ -17,6 +20,7 @@ public class MediaFragment extends MediaBaseFragment{
     private View mView;
     private Media mMedia;
     private ImageView mMediaImageView;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -33,6 +37,25 @@ public class MediaFragment extends MediaBaseFragment{
 
     public void setMedia(Media media){
         mMedia = media;
+    }
+
+
+
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            if(mView!=null){
+                mListener.onPlaySong(-1,-1,mMedia);
+
+            }
+        }
+        else{
+            if(mView!=null){
+                mListener.onStopSong();
+            }
+        }
     }
 
 }

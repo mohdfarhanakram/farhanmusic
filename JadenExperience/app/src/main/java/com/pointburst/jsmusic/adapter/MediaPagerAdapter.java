@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import com.pointburst.jsmusic.listener.JSMediaPlayerListener;
 import com.pointburst.jsmusic.model.Media;
 import com.pointburst.jsmusic.ui.fragment.MediaFragment;
 import com.pointburst.jsmusic.ui.fragment.MediaPlayerFragment;
@@ -18,11 +19,13 @@ public class MediaPagerAdapter extends FragmentStatePagerAdapter {
 
     private ArrayList<Media> mMediaArrayList;
     private Context mContext;
+    private JSMediaPlayerListener mListener;
 
-    public MediaPagerAdapter(FragmentManager fm,Context context,ArrayList<Media> mediaArrayList) {
+    public MediaPagerAdapter(FragmentManager fm,Context context,ArrayList<Media> mediaArrayList,JSMediaPlayerListener listener) {
         super(fm);
         mMediaArrayList = mediaArrayList;
         mContext = context;
+        mListener = listener;
     }
 
     @Override
@@ -31,6 +34,7 @@ public class MediaPagerAdapter extends FragmentStatePagerAdapter {
         Media media = mMediaArrayList.get(i);
         MediaFragment fragment = new MediaFragment();
         fragment.setMedia(media);
+        fragment.setJSMediaPlayerListener(mListener);
         return fragment;
 
     }

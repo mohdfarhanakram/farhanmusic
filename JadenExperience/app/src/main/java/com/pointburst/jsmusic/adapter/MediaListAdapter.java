@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 import com.pointburst.jsmusic.R;
+import com.pointburst.jsmusic.listener.JSMediaPlayerListener;
 import com.pointburst.jsmusic.model.Media;
 
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ public class MediaListAdapter extends BaseAdapter{
     private ArrayList<Media> mMediaArrayList;
     private Context mContext;
     private LayoutInflater mLayoutInflater;
+
 
     public MediaListAdapter(Context context,ArrayList<Media> arrayList) {
         mMediaArrayList = arrayList;

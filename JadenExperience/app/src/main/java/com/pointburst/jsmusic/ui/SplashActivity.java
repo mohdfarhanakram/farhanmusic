@@ -36,7 +36,7 @@ public class SplashActivity extends BaseActivity {
             navigateToHomeScreen(result);
 
         }else{
-           showToast("Some thing went wrong.");
+           showToast(response.getErrorMessage());
         }
 
     }

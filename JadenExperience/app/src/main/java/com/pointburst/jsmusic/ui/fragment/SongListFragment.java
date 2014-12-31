@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 import com.pointburst.jsmusic.R;
@@ -26,6 +27,13 @@ public class SongListFragment extends BaseFragment{
         mView = inflater.inflate(R.layout.fragment_song_list,container,false);
         mListView = (ListView)mView.findViewById(R.id.media_list_view);
         mListView.setAdapter(new MediaListAdapter(getActivity(),mMediaArrayList));
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Media media = mMediaArrayList.get(position);
+                mListener.onPlaySong(-1,position,media);
+            }
+        });
         return mView;
     }
 

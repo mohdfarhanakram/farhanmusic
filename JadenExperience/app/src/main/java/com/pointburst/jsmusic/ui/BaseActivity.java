@@ -31,7 +31,7 @@ import com.pointburst.jsmusic.utils.Utils;
 /**
  * Created by FARHAN on 12/27/2014.
  */
-abstract class BaseActivity extends FragmentActivity implements Response.Listener, Response.ErrorListener{
+abstract public class BaseActivity extends FragmentActivity implements Response.Listener, Response.ErrorListener{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
