@@ -29,7 +29,9 @@ public class MediaPagerAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int i) {
 
         Media media = mMediaArrayList.get(i);
-        return new MediaFragment(media);
+        MediaFragment fragment = new MediaFragment();
+        fragment.setMedia(media);
+        return fragment;
 
     }
 

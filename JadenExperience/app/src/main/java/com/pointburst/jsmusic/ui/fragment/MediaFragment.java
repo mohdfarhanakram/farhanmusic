@@ -31,9 +31,8 @@ public class MediaFragment extends MediaBaseFragment{
         picassoLoad(mMedia.getArtImageUrl(),mMediaImageView);
     }
 
-    public MediaFragment(Media media){
+    public void setMedia(Media media){
         mMedia = media;
     }
-
 
 }

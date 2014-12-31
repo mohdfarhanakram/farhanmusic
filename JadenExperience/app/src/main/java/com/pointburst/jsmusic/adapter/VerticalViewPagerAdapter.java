@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import com.pointburst.jsmusic.model.Media;
+import com.pointburst.jsmusic.ui.fragment.BaseFragment;
 import com.pointburst.jsmusic.ui.fragment.MediaPlayerFragment;
 import com.pointburst.jsmusic.ui.fragment.SongListFragment;
 
@@ -25,18 +26,20 @@ public class VerticalViewPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int i) {
-        Fragment fragment = null;
+        BaseFragment fragment = null;
         switch (i){
             case 0:
-               fragment = new MediaPlayerFragment(mMediaArrayList);
+               fragment = new MediaPlayerFragment();
+
                 break;
             case 1:
                 fragment = new SongListFragment();
+
                 break;
             default:
-                fragment = new MediaPlayerFragment(mMediaArrayList);
+                fragment = new MediaPlayerFragment();
         }
-
+        fragment.setMediaList(mMediaArrayList);
         return fragment;
     }
 

@@ -19,25 +19,26 @@ import java.util.ArrayList;
  */
 public class MediaPlayerFragment extends BaseFragment{
     private View mView;
-    private ArrayList<Media> mMediaArrayList;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_media_player,container,false);
-        ((ViewPager)mView.findViewById(R.id.media_view_pager)).setAdapter(new MediaPagerAdapter(((MainActivity)getActivity()).getSupportFragmentManager(),getActivity(),mMediaArrayList));
+        ((ViewPager)mView.findViewById(R.id.media_view_pager)).setAdapter(new MediaPagerAdapter(getChildFragmentManager(),getActivity(),mMediaArrayList));
+        ((ViewPager)mView.findViewById(R.id.media_view_pager)).setOffscreenPageLimit(mMediaArrayList==null?0:mMediaArrayList.size());
         return mView;
     }
 
-    public MediaPlayerFragment(ArrayList<Media> mediaArrayList){
-        mMediaArrayList = mediaArrayList;
-    }
+
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
-            Toast.makeText(getActivity(),"Media Player is visble",Toast.LENGTH_SHORT).show();
+            if(mView!=null)
+              mView.findViewById(R.id.player_view).setVisibility(View.VISIBLE);
         }
         else{
+            if(mView!=null)
+               mView.findViewById(R.id.player_view).setVisibility(View.GONE);
         }
     }
 }
