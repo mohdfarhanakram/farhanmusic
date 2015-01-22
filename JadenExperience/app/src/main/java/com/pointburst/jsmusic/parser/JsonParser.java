@@ -2,6 +2,7 @@ package com.pointburst.jsmusic.parser;
 
 import android.util.Log;
 import com.google.gson.Gson;
+import com.pointburst.jsmusic.model.Media;
 import com.pointburst.jsmusic.model.Result;
 import org.json.JSONObject;
 
@@ -24,5 +25,20 @@ public class JsonParser {
             Log.e(TAG,e.toString());
         }
      return result;
+    }
+
+
+    public static Media parseMediaJson(JSONObject jsonObject){
+        Media media = null;
+        try{
+            JSONObject jobj = jsonObject.optJSONObject("response").optJSONObject("result").optJSONObject("media");
+            Gson gson = new Gson();
+            media = gson.fromJson(jobj.toString(),Media.class);
+
+        }catch(Exception e){
+            e.printStackTrace();
+            Log.e(TAG,e.toString());
+        }
+        return media;
     }
 }

@@ -25,6 +25,7 @@
         android:layout_alignParentTop="true"
         android:layout_toLeftOf="@id/tv_time"
         android:padding="15dp"
+        android:textColor="#ffffff"
         android:text="Medium Text"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 

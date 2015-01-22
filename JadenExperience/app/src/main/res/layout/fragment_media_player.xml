@@ -1,25 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:background="#ffffff"
-              android:layout_height="match_parent">
+              android:layout_width="fill_parent"
+              android:background="#ff0000"
+              android:layout_height="fill_parent">
     
-    <android.support.v4.view.ViewPager
+    <com.pointburst.jsmusic.ui.widgets.HorizontalViewPager
             android:layout_weight="1"
             android:id="@+id/media_view_pager"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent">
 
-    </android.support.v4.view.ViewPager>
-    <View
-            android:id="@+id/player_view"
-            android:layout_weight="0"
-            android:background="#0000ff"
-            android:layout_width="fill_parent"
-            android:layout_height="100dp">
-    </View>
+    </com.pointburst.jsmusic.ui.widgets.HorizontalViewPager>
 
-
-</LinearLayout>
+</RelativeLayout>

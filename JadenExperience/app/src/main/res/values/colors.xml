@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="controls_bkgrnd">#111111</color>
+    <color name="controls_bkgrnd_translucent">#55000000</color>
+    <color name="progress_bkgrnd">#dedede</color>
+    <color name="progress_red">#dd1e25</color>
+    <color name="progress_red_translucent">#88dd1e25</color>
+    <color name="divider">#363c3c</color>
+    <color name="title_bkgrnd">#55000000</color>
+    <color name="transparent">#00000000</color>
+</resources>

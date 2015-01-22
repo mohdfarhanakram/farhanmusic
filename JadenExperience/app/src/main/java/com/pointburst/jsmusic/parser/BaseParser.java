@@ -8,7 +8,7 @@ import org.json.JSONObject;
 /**
  * Created by FARHAN on 12/27/2014.
  */
-public class BaseParser implements IParser{
+public class BaseParser implements IParser {
 
     public ServiceResponse parseData(int eventType, String data) {
         ServiceResponse response = null;
@@ -46,8 +46,11 @@ public class BaseParser implements IParser{
     protected void parseJsonData(ServiceResponse response) throws JSONException {
         JSONObject jsonObject = response.getJsonObject();
         switch (response.getEvent()) {
-            case ApiEvent.GET_MEDIA_EVENT:
+            case ApiEvent.GET_ALBUM_EVENT:
                  response.setResponse(JsonParser.parseAlbumJson(jsonObject));
+                break;
+            case ApiEvent.MEDIA_EVENT:
+                response.setResponse(JsonParser.parseMediaJson(jsonObject));
                 break;
 
             default:

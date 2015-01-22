@@ -5,7 +5,7 @@ import com.pointburst.jsmusic.model.BaseModel;
 /**
  * Created by FARHAN on 12/27/2014.
  */
-public class ServiceResponse extends BaseModel{
+public class ServiceResponse extends BaseModel {
 
   public static final int SUCCESS     = 200;
   public static final int ERROR       = -1;

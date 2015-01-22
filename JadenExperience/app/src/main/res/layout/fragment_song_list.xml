@@ -2,23 +2,21 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
-              android:layout_width="match_parent"
+              android:layout_width="fill_parent"
               android:background="#ffffff"
-              android:layout_height="match_parent">
-    <View
-            android:visibility="gone"
-            android:id="@+id/player_view"
-            android:layout_weight="0"
-            android:background="#0000ff"
+              android:layout_height="wrap_content">
+    <!--<ScrollView
+            android:id="@+id/scroll_view"
             android:layout_width="fill_parent"
-            android:layout_height="100dp">
-    </View>
-    <ListView
-            android:layout_weight="1"
-            android:id="@+id/media_list_view"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="fill_parent">-->
+        <ListView
 
-    </ListView>
+                android:background="#00ff00"
+                android:id="@+id/media_list_view"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+        </ListView>
+   <!-- </ScrollView>-->
+
 
 </LinearLayout>

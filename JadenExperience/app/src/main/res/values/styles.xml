@@ -5,4 +5,143 @@
         <!-- Customize your theme here. -->
     </style>
 
+    <style name="progress_bar_theme"
+           parent="android:Widget.ProgressBar.Horizontal">
+        <item name="android:indeterminateOnly">false</item>
+        <!--<item name="android:progressDrawable">@drawable/custom_progress_bar_horizontal</item>-->
+        <item name="android:minHeight">3dp</item>
+        <item name="android:maxHeight">5dp</item>
+    </style>
+
+    <style name="control_button">
+        <item name="android:paddingTop">20dp</item>
+        <item name="android:paddingBottom">20dp</item>
+        <!--<item name="background">@drawable/control_iv_bkgrnd</item>-->
+    </style>
+
+    <style name="Widget.Button.Toggle"
+           parent="android:Widget">
+        <!--<item name="android:background">@drawable/ic_toggle_bk</item>-->
+        <!--<item name="android:disabledAlpha">?android:attr/disabledAlpha</item>-->
+    </style>
+
+    <style name="SlideLayoutStyleDefault">
+        <item name="sl_dragEnable">true</item>
+        <item name="sl_menuStyle">@style/SlideMenuStyleDefault</item>
+    </style>
+
+    <style name="SlideMenuStyleDefault">
+        <item name="sm_overDrag">true</item>
+        <item name="sm_menuBorder">48dp</item>
+        <item name="sm_menuOverDragBorder">48dp</item>
+        <item name="sm_slideRatio">0.5</item>
+        <item name="sm_menuShadow">8dp</item>
+        <item name="sm_dragEdge">32dp</item>
+        <item name="sm_touchSlop">16dp</item>
+        <item name="sm_maxDim">0.3</item>
+        <item name="sm_velocitySlop">500</item>
+        <item name="sm_animDuration">800</item>
+        <item name="sm_closeEdge">0.75</item>
+    </style>
+
+    <style name="SlideLayoutStyleDemo" parent="@style/SlideLayoutStyleDefault">
+        <item name="sl_dragEnable">true</item>
+        <item name="sl_leftMenuStyle">@style/LeftSlideMenuStyleDemo</item>
+        <item name="sl_rightMenuStyle">@style/RightSlideMenuStyleDemo</item>
+        <item name="sl_topMenuStyle">@style/TopSlideMenuStyleDemo</item>
+        <item name="sl_bottomMenuStyle">@style/BottomSlideMenuStyleDemo</item>
+        <item name="sl_menuStyle">@style/SlideMenuStyleDemo</item>
+    </style>
+
+    <style name="SlideLayoutStyle2Demo" parent="@style/SlideLayoutStyleDefault">
+        <item name="sl_dragEnable">true</item>
+        <item name="sl_menuStyle">@style/SlideMenuStyleDemo</item>
+        <item name="sl_leftMenuChild">0</item>
+        <item name="sl_rightMenuChild">1</item>
+        <item name="sl_bottomMenuChild">2</item>
+        <item name="sl_contentChild">3</item>
+    </style>
+
+    <style name="SlideMenuStyleDemo" parent="@style/SlideMenuStyleDefault">
+        <item name="sm_overDrag">false</item>
+        <item name="sm_menuBorder">48dp</item>
+        <item name="sm_menuOverDragBorder">0dp</item>
+        <item name="sm_slideRatio">0.5</item>
+        <item name="sm_menuShadow">8dp</item>
+        <item name="sm_dragEdge">16dp</item>
+        <item name="sm_touchSlop">16dp</item>
+        <item name="sm_maxDim">0.7</item>
+        <item name="sm_velocitySlop">500</item>
+        <item name="sm_animDuration">800</item>
+        <item name="sm_closeEdge">0.75</item>
+        <item name="sm_animInterpolator">@android:anim/decelerate_interpolator</item>
+    </style>
+
+    <style name="LeftSlideMenuStyleDemo" parent="@style/SlideMenuStyleDefault">
+        <item name="sm_overDrag">true</item>
+        <item name="sm_menuBorder">96dp</item>
+        <item name="sm_menuOverDragBorder">48dp</item>
+        <item name="sm_slideRatio">1</item>
+        <item name="sm_menuShadow">8dp</item>
+        <item name="sm_dragEdge">48dp</item>
+        <item name="sm_touchSlop">16dp</item>
+        <item name="sm_maxDim">0.7</item>
+        <item name="sm_velocitySlop">500</item>
+        <item name="sm_animDuration">800</item>
+        <item name="sm_closeEdge">0.75</item>
+    </style>
+
+    <style name="RightSlideMenuStyleDemo" parent="@style/SlideMenuStyleDefault">
+        <item name="sm_overDrag">true</item>
+        <item name="sm_menuBorder">96dp</item>
+        <item name="sm_menuOverDragBorder">48dp</item>
+        <item name="sm_slideRatio">0.5</item>
+        <item name="sm_menuShadow">8dp</item>
+        <item name="sm_dragEdge">48dp</item>
+        <item name="sm_touchSlop">16dp</item>
+        <item name="sm_maxDim">0.7</item>
+        <item name="sm_velocitySlop">500</item>
+        <item name="sm_animDuration">800</item>
+        <item name="sm_closeEdge">0.75</item>
+        <item name="sm_animInterpolator">@android:anim/accelerate_interpolator</item>
+    </style>
+
+    <style name="TopSlideMenuStyleDemo" parent="@style/SlideMenuStyleDefault">
+        <item name="sm_overDrag">true</item>
+        <item name="sm_menuBorder">96dp</item>
+        <item name="sm_menuOverDragBorder">48dp</item>
+        <item name="sm_slideRatio">0</item>
+        <item name="sm_menuShadow">8dp</item>
+        <item name="sm_dragEdge">48dp</item>
+        <item name="sm_touchSlop">16dp</item>
+        <item name="sm_maxDim">0.7</item>
+        <item name="sm_velocitySlop">500</item>
+        <item name="sm_animDuration">800</item>
+        <item name="sm_closeEdge">0.75</item>
+        <item name="sm_animInterpolator">@android:anim/accelerate_decelerate_interpolator</item>
+    </style>
+
+    <style name="BottomSlideMenuStyleDemo" parent="@style/SlideMenuStyleDefault">
+        <item name="sm_overDrag">true</item>
+        <item name="sm_menuBorder">96dp</item>
+        <item name="sm_menuOverDragBorder">48dp</item>
+        <item name="sm_slideRatio">-0.5</item>
+        <item name="sm_menuShadow">8dp</item>
+        <item name="sm_dragEdge">48dp</item>
+        <item name="sm_touchSlop">16dp</item>
+        <item name="sm_maxDim">0.7</item>
+        <item name="sm_velocitySlop">500</item>
+        <item name="sm_animDuration">800</item>
+        <item name="sm_closeEdge">0.75</item>
+        <item name="sm_animInterpolator">@android:anim/decelerate_interpolator</item>
+    </style>
+
+    <!--<style name="toggleButton"
+           parent="@android:Theme.Black">
+
+        <item name="android:buttonStyleToggle">@style/Widget.Button.Toggle</item>
+        <item name="android:textOn"></item>
+        <item name="android:textOff"></item>
+    </style>
+-->
 </resources>

@@ -16,6 +16,17 @@ public class Media implements Serializable {
     private String mirrorImageEncodeProfileId;
     private String artImageUrl;
     private String mediaKey;
+    private String streamUrl ;
+
+    public String getStreamUrl() {
+        //if(StringUtils.isNullOrEmpty(streamUrl))
+            //streamUrl = "https://pub2-o.secure.miisolutions.net/mi/pointburst/Stoopid Rich Produced by Tone Jonez_audio_128K.mp3";
+        return streamUrl;
+    }
+
+    public void setStreamUrl(String streamUrl) {
+        this.streamUrl = streamUrl;
+    }
 
     public String getShowHideControlSection() {
         return showHideControlSection;
@@ -88,4 +99,17 @@ public class Media implements Serializable {
     public void setMediaKey(String mediaKey) {
         this.mediaKey = mediaKey;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Media)) return false;
+
+        Media media = (Media) o;
+
+        if (mediaKey != null ? !mediaKey.equals(media.mediaKey) : media.mediaKey != null) return false;
+
+        return true;
+    }
+
 }

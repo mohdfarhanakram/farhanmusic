@@ -1,26 +1,26 @@
 package com.pointburst.jsmusic.ui.fragment;
 
-import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 import com.pointburst.jsmusic.R;
+import com.pointburst.jsmusic.events.MediaEvent;
 import com.pointburst.jsmusic.model.Media;
-import com.pointburst.jsmusic.utils.Logger;
-import com.pointburst.jsmusic.utils.PicassoEx;
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by m.farhan on 12/30/14.
  */
-public class MediaFragment extends MediaBaseFragment{
+public class MediaFragment extends MediaBaseFragment {
 
     private View mView;
     private Media mMedia;
     private ImageView mMediaImageView;
-
+    private int INVALID_POINTER_ID = -1;
+    private int mActivePointerId = INVALID_POINTER_ID ;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -32,30 +32,49 @@ public class MediaFragment extends MediaBaseFragment{
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        picassoLoad(mMedia.getArtImageUrl(),mMediaImageView);
+        ((TextView)mView.findViewById(R.id.tv_title)).setText(mMedia.getTitle());
+        picassoLoad(mMedia.getArtImageUrl(), mMediaImageView);
+    }
+
+    private void setBusEvent(int index){
+        MediaEvent mediaEvent = new MediaEvent();
+        mediaEvent.setIndex(index);
+        mediaEvent.setType(MediaEvent.PLAY_SONG_AT_INDEX);
+        EventBus.getDefault().post(mediaEvent);
     }
 
     public void setMedia(Media media){
         mMedia = media;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        EventBus.getDefault().register(this);
+    }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        EventBus.getDefault().unregister(this);
+    }
 
+    public void onEvent(Object o){
+
+    }
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
-            if(mView!=null){
-                mListener.onPlaySong(-1,-1,mMedia);
-
-            }
+            setBusEvent(getCurrentMediaIndex());
         }
         else{
-            if(mView!=null){
-                mListener.onStopSong();
-            }
+
         }
     }
+
+
+
 
 }

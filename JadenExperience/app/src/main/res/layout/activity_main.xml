@@ -6,12 +6,15 @@
                 tools:context="com.pointburst.jsmusic.ui.MainActivity"
                 tools:ignore="MergeRootFrame">
 
-    <com.pointburst.jsmusic.ui.widgets.VerticalViewPager
-            android:id="@+id/vert_view_pager"
+    <com.pointburst.jsmusic.ui.widgets.HorizontalViewPager
+            android:layout_weight="1"
+            android:id="@+id/media_view_pager"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent">
 
-    </com.pointburst.jsmusic.ui.widgets.VerticalViewPager>
+    </com.pointburst.jsmusic.ui.widgets.HorizontalViewPager>
+
+
 
 
 </RelativeLayout>

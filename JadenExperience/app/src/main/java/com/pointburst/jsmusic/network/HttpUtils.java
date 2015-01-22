@@ -7,7 +7,6 @@ import android.util.Log;
 import com.android.volley.TimeoutError;
 import com.pointburst.jsmusic.BuildConfig;
 
-
 import java.io.IOException;
 import java.net.SocketException;
 import java.net.URISyntaxException;

@@ -1,24 +1,30 @@
 package com.pointburst.jsmusic.ui;
 
-import android.app.Activity;
 import android.app.Dialog;
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
-import android.util.Config;
-import android.util.Log;
 import android.view.KeyEvent;
+import android.view.View;
 import android.view.Window;
+import android.widget.RemoteViews;
 import android.widget.Toast;
 import com.android.volley.*;
-import com.android.volley.toolbox.Volley;
+import com.pointburst.jsmusic.R;
 import com.pointburst.jsmusic.constant.ApiEvent;
 import com.pointburst.jsmusic.constant.Constants;
+import com.pointburst.jsmusic.model.Album;
+import com.pointburst.jsmusic.model.Media;
+import com.pointburst.jsmusic.model.Result;
 import com.pointburst.jsmusic.network.ServiceResponse;
 import com.pointburst.jsmusic.network.VolleyGenericRequest;
 import com.pointburst.jsmusic.network.VolleyHelper;
@@ -26,12 +32,11 @@ import com.pointburst.jsmusic.parser.BaseParser;
 import com.pointburst.jsmusic.parser.IParser;
 import com.pointburst.jsmusic.utils.Logger;
 import com.pointburst.jsmusic.utils.StringUtils;
-import com.pointburst.jsmusic.utils.Utils;
 
 /**
  * Created by FARHAN on 12/27/2014.
  */
-abstract public class BaseActivity extends FragmentActivity implements Response.Listener, Response.ErrorListener{
+abstract public class BaseActivity extends FragmentActivity implements Response.Listener, Response.ErrorListener, View.OnClickListener{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,22 +58,14 @@ abstract public class BaseActivity extends FragmentActivity implements Response.
             final IParser parser1 = parser == null ? new BaseParser() : parser;
 
             if (StringUtils.isNullOrEmpty(cachedResponse)) {
-                Logger.print("request "+ url + "");
+                Logger.print("request " + url + "");
 
-                if (Utils.isInternetAvailable(this)) {
-                    if (isLoaderRequired)
-                        showProgressDialog();
                     VolleyGenericRequest req = new VolleyGenericRequest(url, responseListener, errorListener, ctx);
                     req.setRequestData(requestObject);
                     req.setEvent(eventType);
                     req.setParser(parser1);
                     //TODO  req.setRequestTimeOut(Constants.API_TIMEOUT);
                     VolleyHelper.getInstance(this).addRequestInQueue(req);
-                }else {
-                    removeProgressDialog();
-                    showToast("Network Error Occured");
-                    returnVal = true;
-                }
 
             } else {
 
@@ -166,7 +163,7 @@ abstract public class BaseActivity extends FragmentActivity implements Response.
     public String getJSONForRequest(int eventType) {
         String request = null;
         switch (eventType) {
-            case ApiEvent.GET_MEDIA_EVENT:
+            case ApiEvent.GET_ALBUM_EVENT:
                 request = Constants.MEDIA_RESULT;
                 break;
 
@@ -231,4 +228,9 @@ abstract public class BaseActivity extends FragmentActivity implements Response.
     public void updateUi(ServiceResponse response){
 
     }
+
+
+
+
+
 }
