@@ -19,8 +19,6 @@ public class MediaFragment extends MediaBaseFragment {
     private View mView;
     private Media mMedia;
     private ImageView mMediaImageView;
-    private int INVALID_POINTER_ID = -1;
-    private int mActivePointerId = INVALID_POINTER_ID ;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -40,7 +38,8 @@ public class MediaFragment extends MediaBaseFragment {
         MediaEvent mediaEvent = new MediaEvent();
         mediaEvent.setIndex(index);
         mediaEvent.setType(MediaEvent.PLAY_SONG_AT_INDEX);
-        EventBus.getDefault().post(mediaEvent);
+        EventBus.getDefault().postSticky(mediaEvent);
+
     }
 
     public void setMedia(Media media){

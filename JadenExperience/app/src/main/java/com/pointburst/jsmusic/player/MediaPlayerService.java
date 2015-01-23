@@ -13,13 +13,15 @@ import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.widget.RemoteViews;
+import android.widget.Toast;
 import com.pointburst.jsmusic.R;
 import com.pointburst.jsmusic.constant.Constants;
 import com.pointburst.jsmusic.events.MediaEvent;
-import com.pointburst.jsmusic.listener.JSMediaPlayerListener;
+import com.pointburst.jsmusic.listener.PMediaPlayerListener;
 import com.pointburst.jsmusic.model.Album;
 import com.pointburst.jsmusic.model.Media;
 import com.pointburst.jsmusic.model.Result;
+import com.pointburst.jsmusic.network.ServiceResponse;
 import com.pointburst.jsmusic.ui.MainActivity;
 import com.pointburst.jsmusic.utils.Logger;
 import com.pointburst.jsmusic.utils.StringUtils;
@@ -34,16 +36,15 @@ import java.util.Random;
  */
 public class MediaPlayerService extends BaseService {
 
-    private MediaPlayer mp;
+    private PMediaPlayer mediaPlayer;
     private Notification mNotification;
-
+    private RemoteViews remoteViews;
     private ArrayList<Media> mMediaArrayList = new ArrayList<Media>();
     private int mCurrentMediaIndex = 0;
     private boolean isShuffle;
     private boolean isMute;
     private boolean playerInBackGround;
-
-    private JSMediaPlayerListener mListener;
+    private PMediaPlayerListener mListener;
 
     Binder playerServiceBinder = new MediaPlayerBinder();
 
@@ -52,56 +53,59 @@ public class MediaPlayerService extends BaseService {
     @Override
     public IBinder onBind(Intent intent) {
         Logger.print("Bind service");
-
         return playerServiceBinder;
     }
 
+    @Override
+    public boolean onUnbind(Intent intent) {
+        Logger.print("onUnbind service");
+        startNotification(mMediaArrayList.get(mCurrentMediaIndex));
+        return super.onUnbind(intent);
+    }
+
+    @Override
+    public void onRebind(Intent intent) {
+        Logger.print("Re Bind service");
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        createMediaPlayerInstance();
+
+    }
 
     public class MediaPlayerBinder extends Binder {
-        public MediaPlayerService getMediaPlayerService(ArrayList<Media> mediaArrayList,int currentMediaIndex,JSMediaPlayerListener listener) {
+
+        public MediaPlayerService getMediaPlayerService(ArrayList<Media> mediaArrayList,int currentMediaIndex,PMediaPlayerListener listener) {
+
             mMediaArrayList = mediaArrayList;
             mListener = listener;
             mCurrentMediaIndex = currentMediaIndex;
             Logger.print("Musics Player Binder get service");
-            playSong(mCurrentMediaIndex);
+            //playSong(mCurrentMediaIndex);
+            stopNotification();
             return MediaPlayerService.this;
         }
-    }
-
-    public void setJSMediaPlayerListener(JSMediaPlayerListener listener){
-        mListener = listener;
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        if (mp == null) {
-            createMediaPlayerInstance();
-
-        }
-
         if (intent != null) {
             String action = intent.getAction();
             if (!TextUtils.isEmpty(action)) {
                 if (action.equals(Constants.ACTION_PLAY_PAUSE)) {
-                   /* if (mp.isPlaying())
-                        isManualPause = mp.isPlaying();*/
-                    togglePlayPause();
 
+                    togglePlayPause();
 
                 } else if (action.equals(Constants.ACTION_PREV)) {
                     playPrev();
-                    updatePlayerOnUI();
                 } else if (action.equals(Constants.ACTION_NEXT)) {
                     //isManualPause = false;
                     playNext();
-                    updatePlayerOnUI();
                 } else if (action.equals(Constants.ACTION_CLOSE)) {
-
-                    /*ServiceClosedEvent event = new ServiceClosedEvent();
-                    EventBus.getDefault().post(event);*/
-
-                    mp.release();
+                    mediaPlayer.release();
                     stopNotification();
                     stopSelf();
                 }
@@ -109,9 +113,6 @@ public class MediaPlayerService extends BaseService {
 
             }
         }
-
-
-
 
 
         TelephonyManager mgr = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
@@ -148,6 +149,9 @@ public class MediaPlayerService extends BaseService {
 
     @Override
     public boolean onError(MediaPlayer mp, int what, int extra) {
+        if(mListener!=null)
+           mListener.onError();
+
         if(mp!=null) {
             mp.reset();
             mp=null;
@@ -157,7 +161,10 @@ public class MediaPlayerService extends BaseService {
 
     @Override
     public void onPrepared(MediaPlayer mp) {
-      play();
+        if(mListener!=null)
+           mListener.onInitializePlayerSuccess();
+
+        play();
     }
 
     @Override
@@ -185,7 +192,6 @@ public class MediaPlayerService extends BaseService {
             case MediaEvent.PLAY_SONG_AT_INDEX:
                 playSong(mediaEvent.getIndex());
                 break;
-
 
         }
 
@@ -226,42 +232,44 @@ public class MediaPlayerService extends BaseService {
     public void togglePlayPause() {
         Logger.print("MediaPlayerService: Toggleplaypause");
 
-        if (mp.isPlaying()) {
-            mp.pause();
+        if (mediaPlayer.isPlaying()) {
+            mediaPlayer.pause();
         } else {
-            mp.start();
+            mediaPlayer.start();
         }
 
-        startNotification(mMediaArrayList.get(mCurrentMediaIndex));
+
     }
 
     public void toggleVolume() {
         Logger.print("MediaPlayerService: togglevolume");
-        if (mp != null) {
+        if (mediaPlayer != null) {
             if (isMute)
-                mp.setVolume(1.0f, 1.0f);
+                mediaPlayer.setVolume(1.0f, 1.0f);
             else
-                mp.setVolume(0.0f, 0.0f);
+                mediaPlayer.setVolume(0.0f, 0.0f);
 
             isMute = !isMute;
         }
     }
 
     public void resetPlayer(){
-        if(mp.isPlaying()){
-            mp.stop();
-            mp.reset();
+        if(mediaPlayer.isPlaying()){
+            mediaPlayer.stop();
+            mediaPlayer.reset();
         }
     }
 
     public void playSong(int currentMediaIndex){
-
+        if(mListener!=null)
+            mListener.onInitializePlayerStart("");
         if(mCurrentMediaIndex>=0 && mCurrentMediaIndex<mMediaArrayList.size()){
 
-            if(mp.isPlaying()&& currentMediaIndex==mCurrentMediaIndex){
+           /* if(mp.isPlaying()&& currentMediaIndex==mCurrentMediaIndex){
                 Logger.print("Media Player is playing same song.");
                 return;
-            }
+            }*/
+
 
 
             //resetPlayer();
@@ -271,53 +279,58 @@ public class MediaPlayerService extends BaseService {
 
            if(!StringUtils.isNullOrEmpty(media.getStreamUrl())){   //if media instance is having stream URL;
                prepareMediaPlayer(media);
-               startNotification(media);
+               //startNotification(media);
+
            }else{
                fetchMedia(media.getMediaKey());  // hit request to get Stream URL;
            }
-
-
 
         }
     }
 
     public void createMediaPlayerInstance(){
-        mp = new MediaPlayer();
-        mp.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
-        mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        mp.setOnPreparedListener(this);
-        mp.setOnCompletionListener(this);
-        mp.setOnErrorListener(this);
-        mp.setOnBufferingUpdateListener(this);
+        mediaPlayer = new PMediaPlayer();
+        mediaPlayer.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
+        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        mediaPlayer.setOnPreparedListener(this);
+        mediaPlayer.setOnCompletionListener(this);
+        mediaPlayer.setOnErrorListener(this);
+        mediaPlayer.setOnBufferingUpdateListener(this);
         Logger.print("Media Player Instance is created");
     }
 
-    public void prepareMediaPlayer(Media media) {
-        try {
+    public void prepareMediaPlayer(final Media media) {
 
-            if(mp==null)
-                createMediaPlayerInstance();
+            Logger.print("Media Stream URL_1: " + media.getStreamUrl());
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        mediaPlayer.reset();
+                        mediaPlayer.setDataSource(media.getStreamUrl());
+                        mediaPlayer.prepareAsync();
+                    } catch (IllegalArgumentException e) {
+                        Logger.print("Media Player Exception: " + e.getMessage());
+                    } catch (IllegalStateException e) {
+                        Logger.print("Media Player Exception: " + e.getMessage());
+                    } catch (IOException e) {
+                        Logger.print("Media Player Exception: " + e.getMessage());
+                    }
+                }
+            }).start();
 
-            Logger.print("Media Stream URL: " + media.getStreamUrl());
-            mp.reset();
-            mp.setDataSource(media.getStreamUrl());
-            mp.prepareAsync();
+            Logger.print("Media Stream URL_2: " + media.getStreamUrl());
 
-        } catch (IllegalArgumentException e) {
-            Logger.print("Media Player Exception: " + e.getMessage());
-        } catch (IllegalStateException e) {
-            Logger.print("Media Player Exception: " + e.getMessage());
-        } catch (IOException e) {
-            Logger.print("Media Player Exception: " + e.getMessage());
-        }
     }
 
     public void play(){
 
-        if(!mp.isPlaying())
-            mp.start();
+        if(!mediaPlayer.isPlaying()){
+            mediaPlayer.start();
+        }
 
-        startNotification(mMediaArrayList.get(mCurrentMediaIndex));
+        //startNotification(mMediaArrayList.get(mCurrentMediaIndex));
+
 
     }
 
@@ -353,7 +366,7 @@ public class MediaPlayerService extends BaseService {
                     PendingIntent.FLAG_UPDATE_CURRENT);
 
         remoteViews.setOnClickPendingIntent(R.id.iv_play_pause, piActionPlayPause);
-        if (mp.isPlaying())
+        if (mediaPlayer.isPlaying())
             remoteViews.setImageViewResource(R.id.iv_play_pause, R.drawable.ic_pause);
         else
             remoteViews.setImageViewResource(R.id.iv_play_pause, R.drawable.ic_play);
@@ -408,11 +421,11 @@ public class MediaPlayerService extends BaseService {
         @Override
         public void onCallStateChanged(int state, String incomingNumber) {
             if (state == TelephonyManager.CALL_STATE_RINGING) {
-                if (mp.isPlaying()) mp.pause();
+                if (mediaPlayer.isPlaying()) mediaPlayer.pause();
             } else if (state == TelephonyManager.CALL_STATE_IDLE) {
-//				if(mp!= null) mp.start();
+  			     if(mediaPlayer!= null) mediaPlayer.start();
             } else if (state == TelephonyManager.CALL_STATE_OFFHOOK) {
-                if (mp.isPlaying()) mp.pause();
+                //if (mediaPlayer.isPlaying()) mp.pause();
             }
             super.onCallStateChanged(state, incomingNumber);
         }
@@ -422,8 +435,8 @@ public class MediaPlayerService extends BaseService {
     public void onDestroy() {onCreate();
         super.onDestroy();
         EventBus.getDefault().unregister(this);
-        mp.release();
-        mp = null;
+        mediaPlayer.release();
+        mediaPlayer = null;
 
         TelephonyManager mgr = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
         if (mgr != null) {
@@ -468,6 +481,37 @@ public class MediaPlayerService extends BaseService {
         if(mListener!=null){
             mListener.onUpdateMpUi(mCurrentMediaIndex);
         }
+    }
+
+    public void stopMediaPlayer() {
+        stopForeground(true);
+        mediaPlayer.stop();
+        mediaPlayer.release();
+    }
+
+    public void resetMediaPlayer() {
+        stopForeground(true);
+        mediaPlayer.reset();
+    }
+
+
+
+    @Override
+    public void onResponse(Object response) {
+        ServiceResponse serviceResponse = (ServiceResponse)response;
+        if(serviceResponse.isSuccess()){
+            onGetMedia((Media)serviceResponse.getResponse());
+        }else{
+            Toast.makeText(this, serviceResponse.getErrorMessage(), Toast.LENGTH_SHORT).show();
+            if(mListener!=null)
+                mListener.onError();
+        }
+
+    }
+
+    public void setJSMediaPlayerListener(PMediaPlayerListener listener){
+
+        mListener = listener;
     }
 
     /*private int getMediaStatus(){

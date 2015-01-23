@@ -51,7 +51,6 @@ public class BaseService extends Service implements MediaPlayer.OnPreparedListen
                 returnVal = true;
             }
 
-
         return returnVal;
     }
 
@@ -84,12 +83,7 @@ public class BaseService extends Service implements MediaPlayer.OnPreparedListen
 
     @Override
     public void onResponse(Object response) {
-         ServiceResponse serviceResponse = (ServiceResponse)response;
-         if(serviceResponse.isSuccess()){
-              onGetMedia((Media)serviceResponse.getResponse());
-         }else{
-             Toast.makeText(this,serviceResponse.getErrorMessage(),Toast.LENGTH_SHORT).show();
-         }
+
 
     }
 

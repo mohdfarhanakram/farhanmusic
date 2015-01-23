@@ -8,7 +8,6 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.*;
 import android.util.Log;
-import com.pointburst.jsmusic.listener.Output;
 import com.pointburst.jsmusic.model.Media;
 import com.pointburst.jsmusic.ui.MainActivity;
 import com.pointburst.jsmusic.utils.Logger;
@@ -20,7 +19,7 @@ import java.util.Set;
 /**
  * Created by FARHAN on 1/1/2015.
  */
-public class PlayerService extends Service implements Output,MediaPlayer.OnPreparedListener,
+public class PlayerService extends Service implements MediaPlayer.OnPreparedListener,
         MediaPlayer.OnErrorListener,
         MediaPlayer.OnCompletionListener
 {

@@ -13,6 +13,7 @@ import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
 import android.view.View;
+import android.widget.*;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.RemoteViews;
@@ -22,12 +23,13 @@ import com.pointburst.jsmusic.adapter.MediaListAdapter;
 import com.pointburst.jsmusic.adapter.MediaPagerAdapter;
 import com.pointburst.jsmusic.constant.Constants;
 import com.pointburst.jsmusic.events.BindMusicService;
-import com.pointburst.jsmusic.listener.JSMediaPlayerListener;
+import com.pointburst.jsmusic.listener.PMediaPlayerListener;
 import com.pointburst.jsmusic.model.Album;
 import com.pointburst.jsmusic.model.Media;
 import com.pointburst.jsmusic.model.Result;
 import com.pointburst.jsmusic.network.ServiceResponse;
 import com.pointburst.jsmusic.player.MediaPlayerService;
+import com.pointburst.jsmusic.player.PMediaPlayer;
 import com.pointburst.jsmusic.ui.widgets.SlideLayout;
 import com.pointburst.jsmusic.utils.Logger;
 import de.greenrobot.event.EventBus;
@@ -39,19 +41,13 @@ import java.util.ArrayList;
 /**
  * Created by FARHAN on 12/27/2014.
  */
-public class MainActivity extends BaseActivity implements JSMediaPlayerListener{
 
-    private MediaPlayer mediaPlayer;
-
-    private ArrayList<Media> mediaArrayList = new ArrayList<Media>();
-    private boolean musicBound = false;
+public class MainActivity extends BaseActivity implements PMediaPlayerListener{
 
     private MediaPlayerService mPlayerService;
+    private ArrayList<Media> mediaArrayList = new ArrayList<Media>();
+    private boolean musicBound = false;
     private int mCurrentMediaIndex;
-
-    private RemoteViews remoteViews;
-    private Notification mNotification;
-
 
 
     private ServiceConnection musicConnection = new ServiceConnection() {
@@ -67,6 +63,7 @@ public class MainActivity extends BaseActivity implements JSMediaPlayerListener{
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
+            Logger.print("onServiceDisconnected called");
             musicBound = false;
         }
     };
@@ -97,8 +94,15 @@ public class MainActivity extends BaseActivity implements JSMediaPlayerListener{
 
             }
         });
+
+        ((ViewPager)findViewById(R.id.media_view_pager)).setOffscreenPageLimit(mediaArrayList.size());
         onUpdateMpUi(mCurrentMediaIndex);
         setSongListAdapter();
+
+        findViewById(R.id.playPauseButton).setOnClickListener(this);
+        findViewById(R.id.nextButton).setOnClickListener(this);
+        findViewById(R.id.previousButton).setOnClickListener(this);
+
     }
 
     private void setSongListAdapter(){
@@ -112,6 +116,7 @@ public class MainActivity extends BaseActivity implements JSMediaPlayerListener{
             }
         });
 
+
     }
 
     @Override
@@ -124,6 +129,7 @@ public class MainActivity extends BaseActivity implements JSMediaPlayerListener{
 
     public void onEvent(Media media){
 
+
     }
 
     public void onEvent(BindMusicService service){
@@ -134,7 +140,7 @@ public class MainActivity extends BaseActivity implements JSMediaPlayerListener{
     /*public void onEvent(ServiceClosedEvent event){
         Logger.print("Receive event from Media service that it was closed and has to be restarted");
         *//*if (musicBound) {
-            Logger.print("unbinding");
+            Logger.print("unboinding");
             unbindService(musicConnection);
             musicBound = false;
         }*//*
@@ -142,24 +148,20 @@ public class MainActivity extends BaseActivity implements JSMediaPlayerListener{
         EventBus.getDefault().register(this);
     }*/
 
-    @Override
-    public void onStop() {
 
-        if (musicBound) {
-            Logger.print("unbinding");
-            unbindService(musicConnection);
-            musicBound = false;
-        }
-
-        super.onStop();
-    }
 
     private void bindMusicService() {
 
+       if (musicBound) {
+           Logger.print("un Bind from resume");
+           unbindService(musicConnection);
+           musicBound = false;
+       }
+
         Intent playIntent = new Intent(this, MediaPlayerService.class);
 
-        if (iSMediaPlayerServiceRunning()) {
-            //bindService(playIntent, musicConnection, Context.BIND_AUTO_CREATE);
+        if (iSMediaPlayerServiceRunning() && !musicBound) {
+            bindService(playIntent, musicConnection, Context.BIND_AUTO_CREATE);
         }
         else {
             startService(playIntent);
@@ -187,7 +189,27 @@ public class MainActivity extends BaseActivity implements JSMediaPlayerListener{
     }
 
     @Override
+    public void onInitializePlayerStart(String message) {
+       findViewById(R.id.loader_layout).setVisibility(View.GONE);
+        changePlayPauseBtn(false);
+    }
+
+    @Override
+    public void onInitializePlayerSuccess() {
+        findViewById(R.id.loader_layout).setVisibility(View.GONE);
+        changePlayPauseBtn(true);
+    }
+
+    @Override
+    public void onError() {
+        findViewById(R.id.loader_layout).setVisibility(View.GONE);
+        changePlayPauseBtn(false);
+    }
+
+    @Override
     public void onUpdateMpUi(int index) {
+        mCurrentMediaIndex = index;
+
         ((ViewPager)findViewById(R.id.media_view_pager)).setCurrentItem(index);
         updateLyric(index);
     }
@@ -208,124 +230,62 @@ public class MainActivity extends BaseActivity implements JSMediaPlayerListener{
     @Override
     public void onClick(View v) {
         switch(v.getId()){
-            case R.id.play_img_btn:
+            case R.id.playPauseButton:
+                /*if(mPlayerService.getMediaPlayer()==null)
+                    return;
+                if(mPlayerService.getMediaPlayer().isPlaying()) {
+                    changePlayPauseBtn(false);
+                    mPlayerService.getMediaPlayer().pause();
+                }else {
+                    changePlayPauseBtn(true);
+                    mPlayerService.getMediaPlayer().start();
+                }*/
                 break;
-            case R.id.next_img_btn:
+            case R.id.nextButton:
+                int ind  = mCurrentMediaIndex + 1;
+                if(mediaArrayList.size()==ind)
+                    ind = 0;
+                onUpdateMpUi(ind);
                 break;
-            case R.id.prev_img_btn:
+            case R.id.previousButton:
+                if(mCurrentMediaIndex == 0)
+                    mCurrentMediaIndex = mediaArrayList.size()-1;
+                onUpdateMpUi(mCurrentMediaIndex);
                 break;
-            case R.id.suffle_img_btn:
+            case R.id.shuffleButton:
                 break;
-            case R.id.repeat_img_btn:
+            case R.id.repeatButton:
                 break;
         }
     }
 
+
     @Override
+    public void onPause() {
+        super.onPause();
+        EventBus.getDefault().unregister(this);
+       /*if(mPlayerService!=null){
+            Media media = mediaArrayList.get(mCurrentMediaIndex);
+            mPlayerService.startNotification(media);
+
+       }*/
+    }
+
+
+    private void changePlayPauseBtn(boolean isPlaying) {
+        if ( isPlaying)
+            ((ImageButton) findViewById(R.id.playPauseButton)).setImageResource(R.drawable.ic_action_pause);
+        else
+            ((ImageButton) findViewById(R.id.playPauseButton)).setImageResource(R.drawable.ic_action_play);
+    }
+
+           @Override
     protected void onResume() {
         super.onResume();
         Logger.print("onResume called");
         EventBus.getDefault().register(this);
         bindMusicService();
     }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        EventBus.getDefault().unregister(this);
-    }
-
-
-    private void createNotification(Media media, int index,boolean isPlaying) {
-
-        remoteViews = new RemoteViews(getPackageName(), R.layout.song_notification);
-        // Open NotificationView Class on Notification Click
-        Intent intentStartActivity = new Intent(this, MainActivity.class);
-        intentStartActivity.putExtra(Constants.CURRENT_MEDIA_INDEX,index);
-        intentStartActivity.putExtra(Constants.RESULT_KEY,getResultInstance());
-
-        // Send data to NotificationView Class
-        // Open NotificationView.java Activity
-        PendingIntent pIntent = PendingIntent.getActivity(this, 0, intentStartActivity,
-                PendingIntent.FLAG_UPDATE_CURRENT);
-        remoteViews.setImageViewResource(R.id.iv_album_art, R.drawable.thejadenexperiencehighq);
-        remoteViews.setTextViewText(R.id.tv_title, media.getTitle());
-
-        //Previous button action
-        Intent intentActionPrev = new Intent(Constants.ACTION_PREV);
-        PendingIntent piActionPrev = PendingIntent.getService(getApplicationContext(),
-                Constants.REQUEST_CODE_ACTION, intentActionPrev,
-                PendingIntent.FLAG_UPDATE_CURRENT);
-        remoteViews.setOnClickPendingIntent(R.id.iv_prev, piActionPrev);
-
-        //PlayPause button action
-        Intent intentActionPlayPause = new Intent(Constants.ACTION_PLAY_PAUSE);
-        PendingIntent piActionPlayPause = PendingIntent.getService(getApplicationContext(),
-                Constants.REQUEST_CODE_ACTION, intentActionPlayPause,
-                PendingIntent.FLAG_UPDATE_CURRENT);
-
-        remoteViews.setOnClickPendingIntent(R.id.iv_play_pause, piActionPlayPause);
-        if (isPlaying)
-            remoteViews.setImageViewResource(R.id.iv_play_pause, R.drawable.ic_pause);
-        else
-            remoteViews.setImageViewResource(R.id.iv_play_pause, R.drawable.ic_play);
-
-        //Next button action
-        Intent intentActionNext = new Intent(Constants.ACTION_NEXT);
-        PendingIntent piActionNext = PendingIntent.getService(getApplicationContext(),
-                Constants.REQUEST_CODE_ACTION, intentActionNext,
-                PendingIntent.FLAG_UPDATE_CURRENT);
-
-        remoteViews.setOnClickPendingIntent(R.id.iv_next, piActionNext);
-
-        //Close button action
-
-        Intent intentActionClose = new Intent(Constants.ACTION_CLOSE);
-        PendingIntent piActionClose = PendingIntent.getService(getApplicationContext(),
-                Constants.REQUEST_CODE_ACTION, intentActionClose,
-                PendingIntent.FLAG_UPDATE_CURRENT);
-
-        remoteViews.setOnClickPendingIntent(R.id.iv_close, piActionClose);
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
-
-        builder.setSmallIcon(R.drawable.ic_launcher);
-        builder.setContentTitle(media.getTitle());
-        // Set Ticker Message
-        builder.setTicker(media.getTitle());
-        // Dismiss Notification
-        builder.setAutoCancel(true);
-        // Set PendingIntent into Notification
-        builder.setContentIntent(pIntent);
-        // Set RemoteViews into Notification
-        builder.setContent(remoteViews);
-        mNotification = builder.build();
-        mNotification.flags = Notification.FLAG_NO_CLEAR
-                | Notification.FLAG_ONGOING_EVENT;
-        mPlayerService.startForeground(Constants.NOTIFICATION_ID, mNotification);
-    }
-
-    public void startNotification(Media media, int index,boolean isPlaying) {
-        Logger.print("Start Notification");
-        createNotification(media,index,isPlaying);
-    }
-
-    public void stopNotification() {
-        Logger.print("Stopping Notification");
-        mPlayerService.stopForeground(true);
-        mNotification = null;
-    }
-
-    private Result getResultInstance(){
-
-        Result result = new Result();
-        Album album = new Album();
-        album.setMedias(mediaArrayList);
-        result.getAlbums().add(album);
-
-        return result;
-    }
-
 
 
 

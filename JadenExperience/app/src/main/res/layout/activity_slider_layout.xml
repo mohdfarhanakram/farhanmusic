@@ -1,92 +1,129 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="vertical"
         android:layout_width="fill_parent"
-        android:background="@drawable/def"
         android:layout_height="fill_parent">
-
-    <com.pointburst.jsmusic.ui.widgets.SlideLayout
-            android:layout_weight="1"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            style="@style/SlideLayoutStyleDemo"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:sl_contentChild="2"
-            app:sl_topMenuChild="0"
-            android:id="@+id/slider_layout"
-            app:sl_bottomMenuChild="1">
-
         <LinearLayout
-                android:orientation="vertical"
-                android:id="@+id/lyric_layout"
-                android:background="@drawable/def"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-            <TextView
-                    android:id="@+id/lyrics_txt_view"
-                    android:layout_margin="20dp"
-                    android:textColor="#ffffff"
-                    android:textSize="16sp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-        </LinearLayout>
-
-        <ListView
-                android:id="@+id/media_list_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:divider="#19000000"
-                android:dividerHeight="1dp"
-                android:background="@drawable/def"/>
-
-        <android.support.v4.view.ViewPager
-                android:id="@+id/media_view_pager"
+                android:id="@+id/main_id"
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent" />
+                      android:orientation="vertical"
+                      android:layout_height="fill_parent">
+
+                <com.pointburst.jsmusic.ui.widgets.SlideLayout
+                        android:layout_weight="1"
+                        xmlns:app="http://schemas.android.com/apk/res-auto"
+                        style="@style/SlideLayoutStyleDemo"
+                        android:background="@drawable/def"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:sl_contentChild="2"
+                        app:sl_topMenuChild="0"
+                        android:id="@+id/slider_layout"
+                        app:sl_bottomMenuChild="1">
+
+                        <LinearLayout
+                                android:orientation="vertical"
+                                android:id="@+id/lyric_layout"
+                                android:background="@drawable/def"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+                                <TextView
+                                        android:id="@+id/lyrics_txt_view"
+                                        android:layout_margin="20dp"
+                                        android:textColor="#ffffff"
+                                        android:textSize="16sp"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"/>
+                        </LinearLayout>
+
+                        <ListView
+                                android:id="@+id/media_list_view"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:divider="#19000000"
+                                android:dividerHeight="1dp"
+                                android:background="@drawable/def"/>
+
+                        <android.support.v4.view.ViewPager
+                                android:id="@+id/media_view_pager"
+                                android:layout_width="fill_parent"
+                                android:layout_height="fill_parent" />
 
 
-    </com.pointburst.jsmusic.ui.widgets.SlideLayout>
-    <LinearLayout
-            android:orientation="horizontal"
-            android:background="#000000"
-            android:layout_width="fill_parent"
-            android:layout_height="50dp">
-        <ImageView
-                android:layout_weight="1"
-                android:id="@+id/repeat_img_btn"
-                android:src="@drawable/ic_action_repeat"
-                android:layout_gravity="center_vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-        <ImageView
-                android:layout_weight="1"
-                android:id="@+id/prev_img_btn"
-                android:src="@drawable/ic_action_previous"
-                android:layout_gravity="center_vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-        <ImageView
-                android:layout_weight="1"
-                android:id="@+id/play_img_btn"
-                android:src="@drawable/ic_action_play"
-                android:layout_gravity="center_vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-        <ImageView
-                android:layout_weight="1"
-                android:id="@+id/next_img_btn"
-                android:src="@drawable/ic_action_next"
-                android:layout_gravity="center_vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-        <ImageView
-                android:layout_weight="1"
-                android:id="@+id/suffle_img_btn"
-                android:src="@drawable/ic_action_shuffle"
-                android:layout_gravity="center_vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                </com.pointburst.jsmusic.ui.widgets.SlideLayout>
 
-   </LinearLayout>
-</LinearLayout>
+                <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="72dp"
+                        android:background="#000000"
+                        android:orientation="horizontal">
+
+                        <ImageButton
+                                android:id="@+id/shuffleButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:background="?android:selectableItemBackground"
+                                android:scaleType="centerInside"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_action_shuffle" />
+
+                        <ImageButton
+                                android:id="@+id/previousButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:layout_gravity="center"
+                                android:background="?android:selectableItemBackground"
+                                android:src="@drawable/ic_action_previous" />
+
+                        <ImageButton
+                                android:layout_weight="1"
+                                android:layout_gravity="center"
+                                android:id="@+id/playPauseButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/ic_action_play"
+                                android:background="?android:selectableItemBackground"
+                                android:scaleType="centerInside"
+                                android:visibility="visible"/>
+
+                        <ImageButton
+                                android:id="@+id/nextButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:layout_gravity="center"
+                                android:background="?android:selectableItemBackground"
+                                android:src="@drawable/ic_action_next" />
+
+                        <ImageButton
+                                android:id="@+id/repeatButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:layout_gravity="center"
+                                android:background="?android:selectableItemBackground"
+                                android:scaleType="centerInside"
+                                android:src="@drawable/ic_action_repeat" />
+
+                </LinearLayout>
+
+        </LinearLayout>
+        <RelativeLayout
+                android:id="@+id/loader_layout"
+                android:clickable="true"
+                android:visibility="gone"
+                android:layout_alignBottom="@+id/main_id"
+                android:layout_gravity="center"
+                android:background="@android:color/transparent"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+
+                <ProgressBar
+                        android:layout_centerInParent="true"
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"/>
+
+        </RelativeLayout>
+ </RelativeLayout>

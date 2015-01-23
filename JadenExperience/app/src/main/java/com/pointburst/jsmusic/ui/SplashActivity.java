@@ -80,5 +80,11 @@ public class SplashActivity extends BaseActivity {
         findViewById(R.id.loader).setVisibility(View.VISIBLE);
         fetchData(ServerApi.ALBUM_URL, ApiEvent.GET_ALBUM_EVENT, null, null, this, this, this, false);
     }
+
+    @Override
+    public void onClick(View v) {
+
+    }
+
 }
 

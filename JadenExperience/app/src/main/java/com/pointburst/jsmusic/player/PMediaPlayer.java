@@ -11,7 +11,7 @@ import java.io.IOException;
  * Created by m.farhan on 1/22/15.
  */
 
-public class JSMediaPlayer extends MediaPlayer {
+public class PMediaPlayer extends MediaPlayer {
     /**
      * Set of states for JSMediaPlayer:<br>
      * EMPTY, CREATED, PREPARED, STARTED, PAUSED, STOPPED, ERROR
@@ -31,7 +31,7 @@ public class JSMediaPlayer extends MediaPlayer {
      * Sets a JSMediaPlayer's data source as the provided media url
      */
     public void setMedia(Media media) {
-       mMedia = media;
+        mMedia = media;
         try {
             setDataSource(mMedia.getStreamUrl());
             setState(MPStates.CREATED);
@@ -45,7 +45,7 @@ public class JSMediaPlayer extends MediaPlayer {
     /**
      * Instantiates a JSMediaPlayer object.
      */
-    public JSMediaPlayer() {
+    public PMediaPlayer() {
         super();
         setState(MPStates.CREATED);
     }
@@ -53,7 +53,7 @@ public class JSMediaPlayer extends MediaPlayer {
     /**
      * Instantiates a JSMediaPlayer object with the Audio Stream Type
      */
-    public JSMediaPlayer(Media media) {
+    public PMediaPlayer(Media media) {
         super();
         this.setAudioStreamType(AudioManager.STREAM_MUSIC);
         mMedia = media;
@@ -146,3 +146,4 @@ public class JSMediaPlayer extends MediaPlayer {
         return (mState == MPStates.PREPARED);
     }
 }
+
